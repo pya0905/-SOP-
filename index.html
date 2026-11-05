@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cocktail SOP Studio | 智慧調酒規格表與流程圖生成器</title>
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- 核心匯出與解析離線模組 (Local Vendor Libraries) -->
+  <script src="libs/xlsx.full.min.js"></script>
+  <script src="libs/exceljs.min.js"></script>
+  <script src="libs/docx.umd.js"></script>
+  <script src="libs/html2canvas.min.js"></script>
+  <script src="libs/jspdf.umd.min.js"></script>
+  
+  <style>
+    /* Toast 通知動畫 */
+    .status-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: #242a3a;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      border-left: 4px solid var(--accent-blue);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .status-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .status-toast.success { border-left-color: #2a9d8f; }
+    .status-toast.warning { border-left-color: #e76f51; }
+    .status-toast.error { border-left-color: #e63946; }
+  </style>
+</head>
+<body>
+  <!-- 頂部應用程式標題列 -->
+  <header class="app-header">
+    <div class="logo-area">
+      <span class="logo-icon">🍸</span>
+      <div>
+        <h1 class="app-title">Cocktail SOP Studio</h1>
+        <p class="app-subtitle">標準調酒製程規格卡・多格式智慧匯出系統 (PDF / EXCEL / WORD / PNG / JPG)</p>
+      </div>
+    </div>
+    <div class="header-badges">
+      <span class="badge">嚴格 1:1 格式還原</span>
+      <span class="badge">免安裝・離線可用</span>
+      <span class="badge">雙引擎智能解析</span>
+    </div>
+  </header>
+
+  <!-- 主畫面：雙欄佈局 (左: 輸入與控制, 右: 1:1 預覽與匯出) -->
+  <main class="app-main">
+    <!-- 左側控制側邊欄 -->
+    <aside class="sidebar-panel">
+      <!-- 1. 範本快速切換 -->
+      <section class="panel-section">
+        <h2 class="section-title">✨ 經典範本快速載入</h2>
+        <div class="presets-grid">
+          <button type="button" class="btn-preset" data-preset="jasmineMelon" title="原圖 100% 相同配置">
+            🍹 No3. Jasmine melon
+          </button>
+          <button type="button" class="btn-preset" data-preset="nySour" title="澄清紐約酸範本">
+            🍋 澄清紐約酸
+          </button>
+          <button type="button" class="btn-preset" data-preset="oolongOF" title="浸漬烏龍 Old Fashioned">
+            🍵 碳焙烏龍 OF
+          </button>
+          <button type="button" class="btn-preset" data-preset="blank" title="清空並載入填空範本">
+            📋 空白填空範本
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. 萬能資料輸入 (任意形式) -->
+      <section class="panel-section">
+        <h2 class="section-title">📥 丟入資料 (不限任何形式)</h2>
+        <textarea id="raw-input" class="input-textarea" placeholder="在此貼上任何形式的調酒資料：
+・雜亂的工作筆記、研發紀錄
+・酒吧通訊軟體對話
+・Excel / 試算表直接複製的文字
+・包含酒名、材料容量、作法、裝飾等..."></textarea>
+      </section>
+
+      <!-- 3. 檔案上傳 / 拖放 -->
+      <section class="panel-section">
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-icon">📁</div>
+          <div class="dropzone-text">點擊或拖放檔案至此</div>
+          <div class="dropzone-subtext">支援 Excel (.xlsx, .xls)、CSV、TXT、圖片照片 (JPG/PNG)</div>
+          <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.txt,.docx,.json,image/*" style="display: none;" />
+        </div>
+      </section>
+
+      <!-- 4. 出杯參數設定 -->
+      <section class="panel-section">
+        <h2 class="section-title">⚙️ 計算參數設定</h2>
+        <div class="params-row">
+          <div class="param-group">
+            <label for="param-portion" class="param-label">單杯容量 (ml)</label>
+            <input type="number" id="param-portion" class="param-input" value="80" min="10" step="5" />
+          </div>
+          <div class="param-group">
+            <label for="param-price" class="param-label">單杯售價 (NTD)</label>
+            <input type="number" id="param-price" class="param-input" value="400" min="50" step="10" />
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Gemini AI 智能解析 (可選) -->
+      <section class="panel-section">
+        <div class="gemini-box">
+          <div class="gemini-header">
+            <span>🤖 Gemini AI 深度解析 (選填)</span>
+          </div>
+          <input type="password" id="gemini-api-key" class="gemini-input" placeholder="輸入 Gemini API Key (可空，空則使用本地超快引擎)" />
+        </div>
+      </section>
+
+      <!-- 6. 動作按鈕 -->
+      <div class="action-buttons">
+        <button type="button" id="btn-generate" class="btn-primary">
+          🚀 生成 SOP 流程圖
+        </button>
+        <button type="button" id="btn-clear" class="btn-secondary">
+          🧹 清空輸入
+        </button>
+      </div>
+    </aside>
+
+    <!-- 右側：1:1 SOP 規格卡實時預覽與匯出工具列 -->
+    <section class="workspace-panel">
+      <!-- 頂部匯出工具列 -->
+      <div class="export-toolbar">
+        <div class="toolbar-group">
+          <span class="toolbar-label">匯出格式：</span>
+          <button type="button" id="btn-export-pdf" class="btn-export btn-export-pdf" title="匯出標準 A4 橫式 PDF 規格書">
+            📄 PDF
+          </button>
+          <button type="button" id="btn-export-excel" class="btn-export btn-export-excel" title="匯出包含公式、顏色、合併儲存格與照片的 Excel 檔">
+            📊 EXCEL
+          </button>
+          <button type="button" id="btn-export-word" class="btn-export btn-export-word" title="匯出標準 Word 規格表格文件">
+            📝 WORD
+          </button>
+          <button type="button" id="btn-export-png" class="btn-export btn-export-img" title="匯出 Retina 3x 高畫質 PNG 圖檔">
+            🖼️ PNG
+          </button>
+          <button type="button" id="btn-export-jpg" class="btn-export btn-export-img" title="匯出 95% 高品質白底 JPG 圖檔">
+            🎨 JPG
+          </button>
+          <button type="button" id="btn-print" class="btn-export btn-export-img" title="直接開啟瀏覽器列印模式">
+            🖨️ 列印
+          </button>
+        </div>
+
+        <div class="toolbar-group text-format-group">
+          <span class="toolbar-label">文字樣式：</span>
+          <button type="button" class="btn-fmt btn-fmt-bold" data-cmd="bold" title="選取文字切換粗體 (Ctrl+B)"><b>B</b> 粗體</button>
+          <button type="button" class="btn-fmt btn-fmt-italic" data-cmd="italic" title="選取文字切換斜體 (Ctrl+I)"><i>I</i></button>
+          <button type="button" class="btn-fmt btn-fmt-underline" data-cmd="underline" title="選取文字加底線 (Ctrl+U)"><u>U</u></button>
+          <div class="toolbar-color-wrap" title="點擊自訂選取文字顏色">
+            <span class="color-preview-dot" id="toolbar-color-preview" style="background: #d90429;"></span>
+            <span class="color-picker-label">文字顏色</span>
+            <input type="color" id="toolbar-color-picker" value="#d90429" />
+          </div>
+          <div class="toolbar-quick-colors">
+            <span class="fmt-color-dot" data-color="#000000" style="background:#000000;" title="黑色"></span>
+            <span class="fmt-color-dot" data-color="#d90429" style="background:#d90429;" title="鮮紅色 (重要警示)"></span>
+            <span class="fmt-color-dot" data-color="#b07d50" style="background:#b07d50;" title="琥珀金棕 (調酒色)"></span>
+            <span class="fmt-color-dot" data-color="#1d3557" style="background:#1d3557;" title="深藍"></span>
+            <span class="fmt-color-dot" data-color="#2a9d8f" style="background:#2a9d8f;" title="翡翠綠"></span>
+            <span class="fmt-color-dot" data-color="#666666" style="background:#666666;" title="中灰"></span>
+          </div>
+        </div>
+
+        <div class="toolbar-group">
+          <button type="button" id="btn-toggle-photo" class="btn-tool" title="添加或更換調酒照片">
+            📷 添加/更換圖片
+          </button>
+          <button type="button" id="btn-delete-photo-tool" class="btn-tool" title="刪除調酒照片格">
+            🗑️ 刪除圖片格
+          </button>
+          <button type="button" id="btn-add-row" class="btn-tool" title="在材料清單中新增一列">
+            ➕ 新增材料
+          </button>
+          <button type="button" id="btn-remove-row" class="btn-tool" title="移除最末一列材料">
+            ➖ 刪除材料
+          </button>
+        </div>
+      </div>
+
+      <!-- 規格卡實時渲染視窗 (所見即所得，可直接點擊表格修改) -->
+      <div class="card-viewport">
+        <div id="card-container">
+          <!-- 由 js/card.js 動態渲染嚴格符合圖片的 SOP 規格卡 -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 懸浮文字格式工具列 (選取文字時在滑鼠上方自動浮現) -->
+  <div id="floating-format-toolbar" class="floating-toolbar">
+    <button type="button" class="fmt-float-btn" data-cmd="bold" title="粗體 (Ctrl+B)"><b>B</b></button>
+    <button type="button" class="fmt-float-btn" data-cmd="italic" title="斜體 (Ctrl+I)"><i>I</i></button>
+    <button type="button" class="fmt-float-btn" data-cmd="underline" title="底線 (Ctrl+U)"><u>U</u></button>
+    <div class="fmt-divider"></div>
+    <div class="fmt-colors-list">
+      <span class="fmt-color-dot" data-color="#000000" style="background:#000000;" title="黑色"></span>
+      <span class="fmt-color-dot" data-color="#d90429" style="background:#d90429;" title="紅色"></span>
+      <span class="fmt-color-dot" data-color="#b07d50" style="background:#b07d50;" title="琥珀棕"></span>
+      <span class="fmt-color-dot" data-color="#1d3557" style="background:#1d3557;" title="深藍"></span>
+      <span class="fmt-color-dot" data-color="#2a9d8f" style="background:#2a9d8f;" title="綠色"></span>
+      <span class="fmt-color-dot" data-color="#666666" style="background:#666666;" title="灰色"></span>
+      <label class="fmt-custom-color-label" title="自訂顏色調色盤">
+        🎨
+        <input type="color" id="floating-color-picker" value="#d90429" />
+      </label>
+    </div>
+    <div class="fmt-divider"></div>
+    <button type="button" class="fmt-float-btn" data-cmd="removeFormat" title="清除格式">✕</button>
+  </div>
+
+  <!-- 狀態提示 Toast -->
+  <div id="status-toast" class="status-toast"></div>
+
+  <!-- 應用程式邏輯腳本 -->
+  <script src="js/presets.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/card.js"></script>
+  <script src="js/exporter.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
