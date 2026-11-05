@@ -399,6 +399,11 @@ class RecipeCard {
         }
       });
     });
+
+    // 觸發卡片渲染完成回呼 (供手機 RWD 縮放連動)
+    if (typeof window.onCardRendered === "function") {
+      window.onCardRendered();
+    }
   }
 
   /**

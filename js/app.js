@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         card.data.photo = e.target.result;
         card.render();
         showToast("已更新調酒杯照！", "success");
+        if (window.innerWidth < 992) switchMobileTab("preview");
       };
       reader.readAsDataURL(file);
       return;
@@ -235,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
           rawInput.value = formatDataToText(parsed);
           card.loadData(parsed);
           showToast("已成功載入 Excel 調酒資料！", "success");
+          if (window.innerWidth < 992) switchMobileTab("preview");
         } catch (err) {
           showToast(`Excel 解析失敗: ${err.message}`, "error");
         }
@@ -251,6 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const parsed = RecipeParser.parseText(content);
       card.loadData(parsed);
       showToast("已解析文字檔案！", "success");
+      if (window.innerWidth < 992) switchMobileTab("preview");
     };
     textReader.readAsText(file);
   }
@@ -449,4 +452,142 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // ==========================================
+  // 10. 行動版分頁切換與卡片動態縮放控制 (RWD)
+  // ==========================================
+  const appMain = document.getElementById("app-main");
+  const mobileTabBtns = document.querySelectorAll(".mobile-tab-btn");
+  const btnViewCard = document.getElementById("btn-view-card");
+  const btnBackToInput = document.getElementById("btn-back-to-input");
+  const btnFitScreen = document.getElementById("btn-fit-screen");
+  const btnActualSize = document.getElementById("btn-actual-size");
+
+  let isFitScreen = true;
+
+  // 手機版切換分頁函式 (全域可存取)
+  function switchMobileTab(tab) {
+    if (appMain) {
+      appMain.setAttribute("data-active-tab", tab);
+    }
+    mobileTabBtns.forEach(btn => {
+      if (btn.dataset.tab === tab) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    if (tab === "preview") {
+      // 切換至 SOP 規格卡預覽：重新計算縮放並捲動至卡片區域
+      setTimeout(() => {
+        applyCardScale();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 60);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  // 供全域或外部函式呼叫
+  window.switchMobileTab = switchMobileTab;
+
+  // 監聽上方行動版頁籤點擊
+  mobileTabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      switchMobileTab(btn.dataset.tab);
+    });
+  });
+
+  // 前往查看規格卡按鈕
+  if (btnViewCard) {
+    btnViewCard.addEventListener("click", () => {
+      switchMobileTab("preview");
+    });
+  }
+
+  // 返回輸入頁面按鈕
+  if (btnBackToInput) {
+    btnBackToInput.addEventListener("click", () => {
+      switchMobileTab("input");
+    });
+  }
+
+  // 計算並套用卡片自適應縮放 (手機上自動等比例縮小以完整展示)
+  function applyCardScale() {
+    const cardEl = document.getElementById("sop-card");
+    const containerEl = document.getElementById("card-container");
+    const viewport = document.querySelector(".card-viewport");
+    if (!cardEl || !containerEl || !viewport) return;
+
+    if (!isFitScreen) {
+      // 100% 原始大小模式：可自由橫向捲動
+      cardEl.style.transform = "none";
+      cardEl.style.transformOrigin = "top left";
+      containerEl.style.width = "1040px";
+      containerEl.style.height = "auto";
+      containerEl.style.overflow = "visible";
+      containerEl.style.margin = "0 auto";
+      return;
+    }
+
+    // 適合螢幕寬度模式：依視窗寬度等比例縮放
+    const viewportWidth = viewport.clientWidth;
+    const availableWidth = viewportWidth > 0 ? (viewportWidth - 20) : (window.innerWidth - 32);
+
+    if (availableWidth < 1040 && availableWidth > 50) {
+      const scale = Math.max(0.2, Math.min(1, availableWidth / 1040));
+      cardEl.style.transform = `scale(${scale})`;
+      cardEl.style.transformOrigin = "top left";
+
+      const cardHeight = cardEl.offsetHeight > 0 ? cardEl.offsetHeight : (cardEl.scrollHeight || 700);
+      containerEl.style.width = `${Math.round(1040 * scale)}px`;
+      containerEl.style.height = `${Math.round(cardHeight * scale + 20)}px`;
+      containerEl.style.overflow = "hidden";
+      containerEl.style.margin = "0 auto";
+    } else {
+      cardEl.style.transform = "none";
+      cardEl.style.transformOrigin = "top left";
+      containerEl.style.width = "1040px";
+      containerEl.style.height = "auto";
+      containerEl.style.overflow = "visible";
+      containerEl.style.margin = "0 auto";
+    }
+  }
+
+  window.applyCardScale = applyCardScale;
+
+  // 適合螢幕與原始大小按鈕
+  if (btnFitScreen) {
+    btnFitScreen.addEventListener("click", () => {
+      isFitScreen = true;
+      btnFitScreen.classList.add("active");
+      if (btnActualSize) btnActualSize.classList.remove("active");
+      applyCardScale();
+      showToast("已縮放適配螢幕寬度", "info");
+    });
+  }
+
+  if (btnActualSize) {
+    btnActualSize.addEventListener("click", () => {
+      isFitScreen = false;
+      btnActualSize.classList.add("active");
+      if (btnFitScreen) btnFitScreen.classList.remove("active");
+      applyCardScale();
+      showToast("已切換 100% 原始大小 (可左右滑動查看細節)", "info");
+    });
+  }
+
+  // 視窗大小改變時重算縮放
+  window.addEventListener("resize", () => {
+    applyCardScale();
+  });
+
+  // 卡片重新渲染時連動重算高度與縮放
+  window.onCardRendered = () => {
+    setTimeout(applyCardScale, 40);
+  };
+
+  // 初始計算一次縮放
+  setTimeout(applyCardScale, 100);
 });

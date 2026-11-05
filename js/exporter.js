@@ -33,6 +33,10 @@ class RecipeExporter {
 
     const baseName = RecipeExporter.sanitizeFilename(cardInstance.data.name);
     cardElem.classList.add("is-exporting");
+    const prevTransform = cardElem.style.transform;
+    const prevOrigin = cardElem.style.transformOrigin;
+    cardElem.style.transform = "none";
+    cardElem.style.transformOrigin = "top left";
 
     try {
       const canvas = await html2canvas(cardElem, {
@@ -46,6 +50,8 @@ class RecipeExporter {
         RecipeExporter.downloadBlob(blob, `${baseName}_SOP流程圖.png`);
       }, "image/png");
     } finally {
+      cardElem.style.transform = prevTransform;
+      cardElem.style.transformOrigin = prevOrigin;
       cardElem.classList.remove("is-exporting");
     }
   }
@@ -59,6 +65,10 @@ class RecipeExporter {
 
     const baseName = RecipeExporter.sanitizeFilename(cardInstance.data.name);
     cardElem.classList.add("is-exporting");
+    const prevTransform = cardElem.style.transform;
+    const prevOrigin = cardElem.style.transformOrigin;
+    cardElem.style.transform = "none";
+    cardElem.style.transformOrigin = "top left";
 
     try {
       const canvas = await html2canvas(cardElem, {
@@ -72,6 +82,8 @@ class RecipeExporter {
         RecipeExporter.downloadBlob(blob, `${baseName}_SOP流程圖.jpg`);
       }, "image/jpeg", 0.95);
     } finally {
+      cardElem.style.transform = prevTransform;
+      cardElem.style.transformOrigin = prevOrigin;
       cardElem.classList.remove("is-exporting");
     }
   }
@@ -85,6 +97,10 @@ class RecipeExporter {
 
     const baseName = RecipeExporter.sanitizeFilename(cardInstance.data.name);
     cardElem.classList.add("is-exporting");
+    const prevTransform = cardElem.style.transform;
+    const prevOrigin = cardElem.style.transformOrigin;
+    cardElem.style.transform = "none";
+    cardElem.style.transformOrigin = "top left";
 
     try {
       const canvas = await html2canvas(cardElem, {
@@ -121,6 +137,8 @@ class RecipeExporter {
       pdf.addImage(imgData, "JPEG", x, y, finalWidth, finalHeight);
       pdf.save(`${baseName}_SOP流程圖.pdf`);
     } finally {
+      cardElem.style.transform = prevTransform;
+      cardElem.style.transformOrigin = prevOrigin;
       cardElem.classList.remove("is-exporting");
     }
   }

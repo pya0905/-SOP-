@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cocktail SOP Studio | 智慧調酒規格表與流程圖生成器</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2.2">
   
   <!-- 核心匯出與解析離線模組 (Local Vendor Libraries) -->
   <script src="libs/xlsx.full.min.js"></script>
@@ -141,6 +141,9 @@
         <button type="button" id="btn-generate" class="btn-primary">
           🚀 生成 SOP 流程圖
         </button>
+        <button type="button" id="btn-view-card" class="btn-secondary mobile-only-btn" title="前往查看生成的規格卡">
+          👀 前往查看 SOP 規格卡 ➔
+        </button>
         <button type="button" id="btn-clear" class="btn-secondary">
           🧹 清空輸入
         </button>
@@ -151,6 +154,13 @@
     <section class="workspace-panel">
       <!-- 頂部匯出工具列 -->
       <div class="export-toolbar">
+        <!-- 行動版專用返回輸入按鈕 -->
+        <div class="toolbar-group mobile-only-group">
+          <button type="button" id="btn-back-to-input" class="btn-tool" title="返回輸入頁面">
+            ⬅ 返回輸入
+          </button>
+        </div>
+
         <div class="toolbar-group">
           <span class="toolbar-label">匯出格式：</span>
           <button type="button" id="btn-export-pdf" class="btn-export btn-export-pdf" title="匯出標準 A4 橫式 PDF 規格書">
@@ -248,11 +258,11 @@
   <!-- 狀態提示 Toast -->
   <div id="status-toast" class="status-toast"></div>
 
-  <!-- 應用程式邏輯腳本 -->
-  <script src="js/presets.js"></script>
-  <script src="js/parser.js"></script>
-  <script src="js/card.js"></script>
-  <script src="js/exporter.js"></script>
-  <script src="js/app.js"></script>
+  <!-- 應用程式邏輯腳本 (附帶版本號強制手機瀏覽器載入最新修復) -->
+  <script src="js/presets.js?v=2.2"></script>
+  <script src="js/parser.js?v=2.2"></script>
+  <script src="js/card.js?v=2.2"></script>
+  <script src="js/exporter.js?v=2.2"></script>
+  <script src="js/app.js?v=2.2"></script>
 </body>
 </html>

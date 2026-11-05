@@ -904,6 +904,12 @@ body {
    響應式設計 (RWD): 手機與電腦跨平台全裝置適配
 ======================================================= */
 
+/* 行動版專用按鈕 (桌機預設隱藏) */
+.mobile-only-btn,
+.mobile-only-group {
+  display: none !important;
+}
+
 /* 行動版分頁導覽列 (桌機預設隱藏) */
 .mobile-tab-nav {
   display: none;
@@ -954,6 +960,37 @@ body {
 @media (max-width: 991px) {
   .mobile-tab-nav {
     display: flex;
+  }
+
+  .mobile-only-btn {
+    display: block !important;
+  }
+
+  #btn-view-card {
+    background: rgba(212, 163, 115, 0.15) !important;
+    color: #d4a373 !important;
+    border: 1px solid #d4a373 !important;
+    font-weight: 700 !important;
+    margin-top: 6px;
+    padding: 12px;
+    font-size: 14px;
+    text-align: center;
+  }
+  #btn-view-card:hover, #btn-view-card:active {
+    background: #d4a373 !important;
+    color: #111111 !important;
+  }
+
+  .mobile-only-group {
+    display: flex !important;
+  }
+
+  #btn-back-to-input {
+    background: #2a3246 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border: 1px solid #3a86ff !important;
+    white-space: nowrap;
   }
 
   .app-header {
@@ -1040,16 +1077,18 @@ body {
 
   /* 手機預覽卡片視窗 */
   .card-viewport {
-    padding: 14px 6px;
+    padding: 14px 8px 60px 8px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
+    min-height: 550px;
   }
 
   /* 卡片在手機上平滑縮放與滾動 */
   .sop-card-frame {
+    transform-origin: top left;
     transition: transform 0.25s ease;
   }
 
