@@ -1,0 +1,1141 @@
+/* css/style.css - 調酒 SOP 規格表與應用程式樣式 (嚴格還原正確版設計) */
+
+:root {
+  --bg-dark: #12151c;
+  --bg-panel: #1b1f2b;
+  --bg-panel-light: #242a3a;
+  --border-color: #2e364a;
+  --text-main: #f0f3f8;
+  --text-muted: #9aa5b8;
+  --accent: #d4a373;
+  --accent-hover: #faedcd;
+  --accent-blue: #3a86ff;
+  --card-header-bg: #c8cbce;
+  --card-border: #000000;
+  --card-text: #000000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", "PingFang TC", sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App Header */
+.app-header {
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  font-size: 28px;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.app-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.header-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 11px;
+  background-color: var(--bg-panel-light);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 163, 115, 0.3);
+}
+
+/* Main Container Layout */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  height: calc(100vh - 65px);
+  overflow: hidden;
+}
+
+/* Left Sidebar - Input Panel */
+.sidebar-panel {
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px;
+  gap: 18px;
+}
+
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Presets Bar */
+.presets-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn-preset {
+  background-color: var(--bg-panel-light);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-preset:hover {
+  background-color: rgba(212, 163, 115, 0.15);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+/* Universal Text Input */
+.input-textarea {
+  width: 100%;
+  height: 180px;
+  background-color: #141720;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 12px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.input-textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+}
+
+/* File Drop Zone */
+.dropzone {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  background-color: rgba(20, 23, 32, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--accent-blue);
+  background-color: rgba(58, 134, 255, 0.08);
+}
+
+.dropzone-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.dropzone-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.dropzone-subtext {
+  font-size: 10px;
+  color: #6c788d;
+  margin-top: 4px;
+}
+
+/* Parameters Row */
+.params-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.param-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.param-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.param-input {
+  background-color: #141720;
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+/* Gemini API Box */
+.gemini-box {
+  background-color: rgba(58, 134, 255, 0.06);
+  border: 1px solid rgba(58, 134, 255, 0.25);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gemini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #70b0ff;
+}
+
+.gemini-input {
+  background-color: #141720;
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  width: 100%;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d4a373 0%, #b07d50 100%);
+  color: #111;
+  font-weight: 700;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+  transition: transform 0.1s, box-shadow 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--bg-panel-light);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Right Content - Preview Workspace */
+.workspace-panel {
+  background-color: #0b0d12;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top Toolbar */
+.export-toolbar {
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.btn-export {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.btn-export-pdf {
+  background-color: #e63946;
+  color: #ffffff;
+}
+.btn-export-pdf:hover { background-color: #f04856; }
+
+.btn-export-excel {
+  background-color: #2a9d8f;
+  color: #ffffff;
+}
+.btn-export-excel:hover { background-color: #38b2a3; }
+
+.btn-export-word {
+  background-color: #1d3557;
+  color: #ffffff;
+  border-color: #457b9d;
+}
+.btn-export-word:hover { background-color: #274773; }
+
+.btn-export-img {
+  background-color: var(--bg-panel-light);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+.btn-export-img:hover {
+  background-color: #31394e;
+  border-color: #4a5675;
+}
+
+.btn-tool {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-tool:hover {
+  color: #ffffff;
+  border-color: var(--text-muted);
+}
+
+/* Card Preview Scroll Viewport */
+.card-viewport {
+  flex: 1;
+  overflow: auto;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: radial-gradient(circle at center, #1a1e2a 0%, #0c0e14 100%);
+}
+
+/* =======================================================
+   SOP CARD EXACT REPLICATION (嚴格按照圖片中設計)
+======================================================= */
+
+.sop-card-frame {
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  padding: 0;
+  width: 1040px; /* 精確對應 A4 橫式比例 */
+  color: var(--card-text);
+  font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", Arial, sans-serif;
+  user-select: text;
+}
+
+.sop-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background-color: #ffffff;
+}
+
+/* 所有儲存格精確黑色細框線 (1px solid #000000) */
+.sop-table th,
+.sop-table td {
+  border: 1px solid var(--card-border);
+  color: #000000;
+  padding: 4px 6px;
+  vertical-align: middle;
+  font-size: 13px;
+  line-height: 1.35;
+  box-sizing: border-box;
+}
+
+/* 標題欄灰底色 (#c8cbce) */
+.sop-header-row th,
+.td-section-header,
+.td-summary-title,
+.td-single-cup-cost-title {
+  background-color: var(--card-header-bg) !important;
+  font-weight: 700;
+  text-align: center;
+  padding: 6px 4px;
+  color: #000000;
+  letter-spacing: 0.3px;
+}
+
+/* 欄位寬度嚴格對齊原圖比例 */
+.th-left-header   { width: 226px; } /* 左側：酒名 + 照片 + 作法 + 裝飾 + 成本率 */
+.th-material      { width: 196px; text-align: center; } /* 材料 / 總計 / 單杯成本 */
+.th-volume        { width: 78px;  text-align: center; font-size: 12px; } /* 總容量(ml) */
+.th-abv           { width: 96px;  text-align: center; font-size: 12px; } /* 酒精濃度(abv) */
+.th-price         { width: 52px;  text-align: center; font-size: 12px; } /* 單價 */
+.th-unit          { width: 52px;  text-align: center; font-size: 12px; } /* 單位 */
+.th-subtotal      { width: 66px;  text-align: center; font-size: 12px; } /* 小計 */
+.th-batch         { width: 274px; text-align: center; } /* 作法 (右側完整長條) */
+
+/* 左側：酒名與照片區塊 */
+.td-cocktail-info {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px 12px;
+  background-color: #ffffff;
+}
+
+.cocktail-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #000000;
+  letter-spacing: 0.2px;
+}
+
+.cocktail-photos-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.cocktail-photo-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto;
+  border: 1px solid #777777;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-del-photo {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(220, 53, 69, 0.92);
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: transform 0.15s, background-color 0.15s;
+}
+
+.btn-del-photo:hover {
+  transform: scale(1.2);
+  background-color: #c82333;
+}
+
+.cocktail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.cocktail-photo-wrapper:hover .photo-overlay {
+  opacity: 1;
+}
+
+.photo-mini-add {
+  width: 32px;
+  height: 90px;
+  border: 1px dashed #888888;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #555555;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: all 0.2s;
+}
+
+.photo-mini-add:hover {
+  border-color: #3a86ff;
+  color: #3a86ff;
+  background-color: rgba(58, 134, 255, 0.08);
+}
+
+.photo-placeholder-wrapper {
+  width: 110px;
+  height: 80px;
+  margin: 4px auto;
+  border: 1px dashed #999999;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.photo-placeholder-wrapper:hover {
+  border-color: #3a86ff;
+  background-color: rgba(58, 134, 255, 0.08);
+  color: #3a86ff;
+}
+
+.photo-add-icon {
+  font-size: 20px;
+}
+
+.photo-add-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #555555;
+}
+
+/* 左側：出杯作法內容 */
+.td-cup-method {
+  vertical-align: middle;
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  background-color: #ffffff;
+}
+
+/* 左側：裝飾內容 (對齊每份容量/總份數) */
+.td-garnish-content {
+  text-align: center;
+  vertical-align: middle;
+  padding: 6px 8px;
+  font-size: 12.5px;
+  background-color: #ffffff;
+}
+
+/* 底部大跨距區塊 (高度延伸對齊右側批次作法) */
+.summary-row-bottom {
+  height: 290px; /* 原圖中底部區塊高約 294px */
+}
+
+/* 底部左側：成本率 (白底) */
+.td-cost-rate-label {
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 13px;
+  width: 110px;
+  background-color: #ffffff;
+}
+
+.td-cost-rate-val {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 13px;
+  font-weight: 600;
+  width: 116px;
+  background-color: #ffffff;
+}
+
+/* 底部中間：單杯成本 (灰底 #c8cbce 標題置中) */
+.td-single-cup-cost-title {
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 13px;
+  background-color: var(--card-header-bg) !important;
+}
+
+.td-bottom-empty {
+  background-color: #ffffff;
+  text-align: center;
+  font-size: 12.5px;
+  cursor: text;
+  vertical-align: middle;
+}
+
+.td-single-cup-cost-val {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #ffffff;
+  cursor: text;
+}
+
+/* 中間：材料明細儲存格 */
+.td-material-name {
+  text-align: left;
+  padding-left: 8px;
+  font-size: 12.5px;
+}
+
+.td-number {
+  text-align: center;
+  font-size: 12.5px;
+}
+
+.td-unit {
+  text-align: center;
+  font-size: 12.5px;
+}
+
+.td-subtotal-val {
+  text-align: center;
+  font-size: 12.5px;
+}
+
+/* 中間底部：總計列樣式 */
+.td-summary-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.td-summary-num {
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: text;
+}
+
+.td-empty {
+  background-color: #ffffff;
+  text-align: center;
+  font-size: 12.5px;
+  cursor: text;
+  min-height: 24px;
+}
+
+/* 右側：批次預製作法與自製配方長條欄位 (跨全高) */
+.td-batch-method {
+  vertical-align: top;
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.38;
+  white-space: pre-wrap;
+  background-color: #ffffff;
+}
+
+/* 儲存格在線編輯提示 */
+[contenteditable="true"] {
+  outline: none;
+  cursor: text;
+  transition: background-color 0.15s;
+}
+
+[contenteditable="true"]:hover {
+  background-color: rgba(212, 163, 115, 0.12);
+}
+
+[contenteditable="true"]:focus {
+  background-color: rgba(58, 134, 255, 0.15);
+  box-shadow: inset 0 0 0 1px #3a86ff;
+}
+
+/* 文字格式工具列樣式 (頂部與懸浮) */
+.text-format-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-fmt {
+  background-color: var(--bg-panel-light);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 5px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-fmt:hover {
+  border-color: #3a86ff;
+  color: #ffffff;
+  background-color: #2b3346;
+}
+
+.toolbar-color-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: var(--bg-panel-light);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.color-preview-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid #ffffff;
+  display: inline-block;
+}
+
+.toolbar-color-wrap input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+.toolbar-quick-colors {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 2px;
+}
+
+.fmt-color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.fmt-color-dot:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}
+
+/* 懸浮文字格式選單 (Floating Toolbar) */
+.floating-toolbar {
+  position: fixed;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  background: #1b1f2b;
+  border: 1px solid #3a86ff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  border-radius: 6px;
+  padding: 4px 8px;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.floating-toolbar.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.fmt-float-btn {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: all 0.15s;
+}
+
+.fmt-float-btn:hover {
+  background: #2e364a;
+  border-color: #3a86ff;
+}
+
+.fmt-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border-color);
+  margin: 0 2px;
+}
+
+.fmt-colors-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fmt-custom-color-label {
+  cursor: pointer;
+  position: relative;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.fmt-custom-color-label input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: auto;
+}
+
+/* 匯出時隱藏控制按鈕與佔位框 */
+.is-exporting .btn-del-photo,
+.is-exporting .photo-overlay,
+.is-exporting .photo-mini-add,
+.is-exporting .photo-placeholder-wrapper,
+.is-exporting .floating-toolbar {
+  display: none !important;
+}
+
+/* =======================================================
+   響應式設計 (RWD): 手機與電腦跨平台全裝置適配
+======================================================= */
+
+/* 行動版分頁導覽列 (桌機預設隱藏) */
+.mobile-tab-nav {
+  display: none;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 12px;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.mobile-tab-btn {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-panel-light);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.mobile-tab-btn.active {
+  background: linear-gradient(135deg, #d4a373 0%, #b07d50 100%);
+  color: #111111;
+  border-color: #d4a373;
+  box-shadow: 0 2px 8px rgba(212, 163, 115, 0.35);
+}
+
+.zoom-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-tool.active {
+  background-color: var(--accent);
+  color: #111111;
+  font-weight: 700;
+  border-color: var(--accent);
+}
+
+/* 平板與手機版樣式 (螢幕寬度小於 992px) */
+@media (max-width: 991px) {
+  .mobile-tab-nav {
+    display: flex;
+  }
+
+  .app-header {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .app-title {
+    font-size: 17px;
+  }
+
+  .header-badges {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .app-main {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 120px);
+    overflow: visible;
+  }
+
+  /* 行動版分頁視圖切換 */
+  .sidebar-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px;
+    overflow: visible;
+    height: auto;
+  }
+
+  .workspace-panel {
+    width: 100% !important;
+    overflow: visible;
+    height: auto;
+    min-height: 480px;
+  }
+
+  /* 依 data-active-tab 決定手機顯示輸入頁或預覽頁 */
+  .app-main[data-active-tab="input"] .workspace-panel {
+    display: none !important;
+  }
+
+  .app-main[data-active-tab="input"] .sidebar-panel {
+    display: flex !important;
+  }
+
+  .app-main[data-active-tab="preview"] .sidebar-panel {
+    display: none !important;
+  }
+
+  .app-main[data-active-tab="preview"] .workspace-panel {
+    display: flex !important;
+  }
+
+  /* 工具列在行動裝置上橫向平滑觸控滾動 */
+  .export-toolbar {
+    padding: 8px 12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    scrollbar-width: none;
+  }
+  .export-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toolbar-group {
+    flex-shrink: 0;
+  }
+
+  .btn-export, .btn-tool, .btn-fmt {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  /* 手機預覽卡片視窗 */
+  .card-viewport {
+    padding: 14px 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  /* 卡片在手機上平滑縮放與滾動 */
+  .sop-card-frame {
+    transition: transform 0.25s ease;
+  }
+
+  /* 防止 iPhone/Safari 輸入時畫面強制自動放大 */
+  input[type="text"],
+  input[type="number"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  .presets-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .btn-preset {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .params-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+/* 超窄螢幕手機 (小於 480px) */
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 16px;
+  }
+  .app-subtitle {
+    font-size: 11px;
+  }
+  .presets-grid {
+    grid-template-columns: 1fr;
+  }
+  .params-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 列印專用樣式 (@media print) */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .app-header,
+  .sidebar-panel,
+  .export-toolbar,
+  .floating-toolbar,
+  .btn-del-photo,
+  .photo-overlay,
+  .photo-mini-add,
+  .photo-placeholder-wrapper {
+    display: none !important;
+  }
+
+  .app-main {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .workspace-panel {
+    background-color: #ffffff !important;
+  }
+
+  .card-viewport {
+    padding: 0 !important;
+    background: none !important;
+    display: block !important;
+  }
+
+  .sop-card-frame {
+    box-shadow: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+}

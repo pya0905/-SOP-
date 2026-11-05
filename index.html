@@ -58,8 +58,18 @@
     </div>
   </header>
 
-  <!-- 主畫面：雙欄佈局 (左: 輸入與控制, 右: 1:1 預覽與匯出) -->
-  <main class="app-main">
+  <!-- 行動裝置/手機版專用分頁切換列 (手機版自動出現) -->
+  <nav class="mobile-tab-nav" id="mobile-tab-nav">
+    <button type="button" class="mobile-tab-btn active" data-tab="input">
+      📥 輸入資料
+    </button>
+    <button type="button" class="mobile-tab-btn" data-tab="preview">
+      🍸 SOP 規格卡
+    </button>
+  </nav>
+
+  <!-- 主畫面：雙欄佈局 (桌機雙欄並排，手機單欄切換) -->
+  <main class="app-main" id="app-main" data-active-tab="input">
     <!-- 左側控制側邊欄 -->
     <aside class="sidebar-panel">
       <!-- 1. 範本快速切換 -->
@@ -181,6 +191,11 @@
             <span class="fmt-color-dot" data-color="#2a9d8f" style="background:#2a9d8f;" title="翡翠綠"></span>
             <span class="fmt-color-dot" data-color="#666666" style="background:#666666;" title="中灰"></span>
           </div>
+        </div>
+
+        <div class="toolbar-group zoom-group">
+          <button type="button" id="btn-fit-screen" class="btn-tool active" title="縮放至適合螢幕寬度">📱 適合螢幕</button>
+          <button type="button" id="btn-actual-size" class="btn-tool" title="顯示 100% 原始大小">🔍 原始大小</button>
         </div>
 
         <div class="toolbar-group">
